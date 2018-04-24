@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Yolo!</title>
+    </head>
+    <body>
+        <h1>Welcome to the yolo page</h1>
+        
+        <form action="/polls/process" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="image">
+            <input type="submit" value="Submit">
+        </form>
+    <a href="/polls">Go back home</a>
+    </body>
+</html>

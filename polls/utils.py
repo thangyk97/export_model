@@ -97,7 +97,7 @@ def draw_boxes(image, boxes, labels):
         #             cv2.FONT_HERSHEY_SIMPLEX,
         #             1e-3 * image.shape[0],
         #             (0,255,0), 2)
-        list.append(labels[box.get_label()] + ' ' + str(round(box.get_score() * 100)))
+        list.append(labels[box.get_label()] + ' ' + str(int(round(box.get_score() * 100))))
     return list
         
 def decode_netout(netout, obj_threshold, nms_threshold, anchors, nb_class):
