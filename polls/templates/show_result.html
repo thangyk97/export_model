@@ -1,0 +1,25 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {{s}}
+
+        <video src="" id="lol"></video>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+        <script>
+            $(function() {
+                var text = "{{s}}";
+                
+                text = encodeURIComponent(text);
+                
+                var url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=" + text;
+                
+                $('video').attr('src', url);
+                var x = document.getElementById("lol"); 
+                x.play();
+            });
+        </script>
+    </body>
+</html>

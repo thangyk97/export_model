@@ -3,7 +3,6 @@ import os
 import xml.etree.ElementTree as ET
 import tensorflow as tf
 import copy
-# import cv2
 
 class BoundBox:
     def __init__(self, x, y, w, h, c = None, classes = None):
@@ -82,23 +81,56 @@ def interval_overlap(interval_a, interval_b):
         else:
             return min(x2,x4) - x3  
 
-def draw_boxes(image, boxes, labels):
-    list = []
-    for box in boxes:
-        xmin  = int((box.x - box.w/2) * image.shape[1])
-        xmax  = int((box.x + box.w/2) * image.shape[1])
-        ymin  = int((box.y - box.h/2) * image.shape[0])
-        ymax  = int((box.y + box.h/2) * image.shape[0])
+def get_info(image, boxes, labels):
+    """
+    detect objectes in image
+    count same objects
+    compute position of object
+    """
+    result = ""
+    list_left = []
+    list_right = []
+    list_midder = []
+    objects_left = np.zeros(len(labels), np.int64)
+    objects_right = np.zeros(len(labels), np.int64)
+    objects_midder = np.zeros(len(labels), np.int64)
 
-        # cv2.rectangle(image, (xmin,ymin), (xmax,ymax), (0,255,0), 3)
-        # cv2.putText(image,
-        #             labels[box.get_label()] + ' ' + str(box.get_score()),
-        #             (xmin, ymin+15),
-        #             cv2.FONT_HERSHEY_SIMPLEX,
-        #             1e-3 * image.shape[0],
-        #             (0,255,0), 2)
-        list.append(labels[box.get_label()] + ' ' + str(int(round(box.get_score() * 100))))
-    return list
+    for box in boxes:
+        # xmin  = int((box.x - box.w/2) * image.shape[1])
+        # xmax  = int((box.x + box.w/2) * image.shape[1])
+        # ymin  = int((box.y - box.h/2) * image.shape[0])
+        # ymax  = int((box.y + box.h/2) * image.shape[0])
+        
+        left = (1 / 3)
+        right = left * 2
+
+        if box.x < left:
+            objects_left[box.label] += 1
+        elif box.x > right:
+            objects_right[box.label] += 1
+        else:
+            objects_midder[box.label] += 1
+
+        # list.append(labels[box.get_label()] + ' ' + str(int(round(box.get_score() * 100))))
+
+    for i in range(len(labels)):
+        if objects_left[i] > 0:
+            list_left.append(str(objects_left[i]) + ' ' + labels[i])
+        if objects_right[i] > 0:
+            list_right.append(str(objects_right[i]) + ' ' + labels[i])
+        if objects_midder[i] > 0:
+            list_midder.append(str(objects_midder[i]) + ' ' + labels[i])  
+    if len(list_midder) > 0 : result += "phía trước có "
+    for s in list_midder:
+        result += s + " "
+    if len(list_left) > 0 : result += "bên trái có "
+    for s in list_left:
+        result += s + " "
+    if len(list_right) > 0 : result += "bên phải có "
+    for s in list_right:
+        result += s + " "
+
+    return result
         
 def decode_netout(netout, obj_threshold, nms_threshold, anchors, nb_class):
 
@@ -164,3 +196,4 @@ def softmax(x, axis=-1, t=-100.):
     e_x = np.exp(x)
     
     return e_x / e_x.sum(axis, keepdims=True)
+
