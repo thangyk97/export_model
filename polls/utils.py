@@ -123,10 +123,10 @@ def get_info(image, boxes, labels):
     if len(list_midder) > 0 : result += "phía trước có "
     for s in list_midder:
         result += s + " "
-    if len(list_left) > 0 : result += "bên trái có "
+    if len(list_left) > 0 : result += ", bên trái có "
     for s in list_left:
         result += s + " "
-    if len(list_right) > 0 : result += "bên phải có "
+    if len(list_right) > 0 : result += ", bên phải có "
     for s in list_right:
         result += s + " "
 
