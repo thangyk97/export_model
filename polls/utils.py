@@ -81,6 +81,57 @@ def interval_overlap(interval_a, interval_b):
         else:
             return min(x2,x4) - x3  
 
+def get_top_boxes(boxes, top_size=1):
+    """
+    
+    """
+    top_size = min([len(boxes), top_size])
+
+    squares  = [compute_s(box) for box in boxes]
+    indexes = index_top_size(squares, top_size) # List
+    result = [boxes[i] for i in indexes]
+
+    return result
+
+def get_distance(boxes1, boxes2, delta, labels):
+    """
+    
+    """
+    s = ""
+    for i in range(min([len(boxes1), len(boxes2)])):
+        d = distance(boxes1[i], boxes2[i], delta)
+        s += labels[boxes1[i].get_label()] + " " + str(format(d, '.2f')) + " mét, "
+
+    return s
+
+def compute_s(box):
+    return box.w * box.h
+
+def index_top_size(squares, top_size):
+    i = 0
+    max = 0
+    for k in range(len(squares)):
+        if squares[k] > max:
+            max = squares[k]
+            i   = k
+
+    return [i]
+
+def distance(box1, box2, delta):
+    temp = min([box1.h, box2.h]) / max([box1.h, box2.h])
+    if 1 - temp != 0:
+        x1 = delta / (1 - temp)
+    else:
+        x1 = 0
+    temp = min([box1.w, box2.w]) / max([box1.w, box2.w])
+    if 1 - temp != 0:
+        x2 = delta / (1 - temp)
+    else:
+        x2 = 0
+
+    return (x1 + x2) / 2
+
+
 def get_info(image, boxes, labels):
     """
     detect objectes in image
@@ -100,6 +151,7 @@ def get_info(image, boxes, labels):
         # xmax  = int((box.x + box.w/2) * image.shape[1])
         # ymin  = int((box.y - box.h/2) * image.shape[0])
         # ymax  = int((box.y + box.h/2) * image.shape[0])
+        
         
         left = (1 / 3)
         right = left * 2
