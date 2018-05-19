@@ -43,7 +43,8 @@ def index(request):
                             nms_threshold=0.3,
                             anchors=ANCHORS,
                             nb_class=CLASS)
-                            
+
+
         s = get_info(img, boxs, labels=LABELS)
 
     # return render_to_response('show_result.html', {'s': s})
@@ -65,7 +66,7 @@ def measure_distance(request):
         
         boxs1 = decode_netout(a1,
                             obj_threshold=0.3,
-                            nms_threshold=0.3,
+                            nms_threshold=0.45,
                             anchors=ANCHORS,
                             nb_class=CLASS)
         

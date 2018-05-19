@@ -89,6 +89,8 @@ def get_top_boxes(boxes, top_size=1):
 
     squares  = [compute_s(box) for box in boxes]
     indexes = index_top_size(squares, top_size) # List
+    if top_size == 0:
+        return []
     result = [boxes[i] for i in indexes]
 
     return result
@@ -100,8 +102,9 @@ def get_distance(boxes1, boxes2, delta, labels):
     s = ""
     for i in range(min([len(boxes1), len(boxes2)])):
         d = distance(boxes1[i], boxes2[i], delta)
-        s += labels[boxes1[i].get_label()] + " " + str(format(d, '.2f')) + " mét, "
-
+        s += labels[boxes1[i].get_label()] + " cách " + str(format(d, '.1f')) + " mét, "
+    if s == "":
+        return "không thể phát hiện vật thể phía trước"
     return s
 
 def compute_s(box):
@@ -181,7 +184,8 @@ def get_info(image, boxes, labels):
     if len(list_right) > 0 : result += ", bên phải có "
     for s in list_right:
         result += s + " "
-
+    if result == "":
+        return "không thể phát hiện vật thể phía trước"
     return result
         
 def decode_netout(netout, obj_threshold, nms_threshold, anchors, nb_class):
